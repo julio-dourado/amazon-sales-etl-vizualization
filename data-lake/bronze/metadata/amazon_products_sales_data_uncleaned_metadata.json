@@ -1,0 +1,115 @@
+{
+  "file_name": "amazon_products_sales_data_uncleaned.csv",
+  "capture_date": "2025-08-21T11:14:29Z",
+  "data_source": "Amazon Marketplace - Web Scraping",
+  "general_description": "Raw (unprocessed) Amazon product data collected through web scraping. This dataset contains electronics product information including prices, ratings, delivery information, and sales metadata.",
+  "data_volume": {
+    "number_of_rows": 42675,
+    "number_of_columns": 16,
+    "size_mb": 37.0
+  },
+  "data_quality": {
+    "status": "uncleaned",
+    "observations": "Raw dataset containing missing values, format inconsistencies, and data requiring cleaning and transformation",
+    "fields_with_missing_values": ["current/discounted_price", "price_on_variant", "buy_box_availability", "delivery_details", "sustainability_badges"],
+    "required_treatment": "Price cleaning, rating normalization, null value handling, date standardization"
+  },
+  "schema": [
+    {
+      "column_name": "title",
+      "data_type": "string",
+      "description": "Complete product title on Amazon",
+      "notes": "Always populated field, may contain special characters and quotes"
+    },
+    {
+      "column_name": "rating",
+      "data_type": "string",
+      "description": "Average product rating in 'X.X out of 5 stars' format",
+      "notes": "Text format that needs to be converted to numeric"
+    },
+    {
+      "column_name": "number_of_reviews",
+      "data_type": "string",
+      "description": "Total number of product reviews",
+      "notes": "Text format with commas as thousands separators (e.g., '2,457')"
+    },
+    {
+      "column_name": "bought_in_last_month",
+      "data_type": "string",
+      "description": "Number of units purchased in the last month",
+      "notes": "Text format like '300+ bought in past month', '6K+ bought in past month'"
+    },
+    {
+      "column_name": "current/discounted_price",
+      "data_type": "string/float",
+      "description": "Current product price after discount",
+      "notes": "May be empty, numeric format when present"
+    },
+    {
+      "column_name": "price_on_variant",
+      "data_type": "string",
+      "description": "Information about product variant pricing",
+      "notes": "Format 'basic variant price: $XX.XX' or 'nan' when not applicable"
+    },
+    {
+      "column_name": "listed_price",
+      "data_type": "string",
+      "description": "Original listed price before discount",
+      "notes": "Format '$XXX.XX' or 'No Discount' when no discount available"
+    },
+    {
+      "column_name": "is_best_seller",
+      "data_type": "string",
+      "description": "Indicates if product has 'Best Seller' badge",
+      "notes": "Values: 'Best Seller' or 'No Badge'"
+    },
+    {
+      "column_name": "is_sponsored",
+      "data_type": "string",
+      "description": "Indicates if product is sponsored or organic",
+      "notes": "Values: 'Sponsored' or 'Organic'"
+    },
+    {
+      "column_name": "is_couponed",
+      "data_type": "string",
+      "description": "Information about discount coupon availability",
+      "notes": "Format 'Save XX% with coupon' or 'No Coupon'"
+    },
+    {
+      "column_name": "buy_box_availability",
+      "data_type": "string",
+      "description": "Availability of Buy Box button on search page",
+      "notes": "Values: 'Add to cart' when available, empty field when not available"
+    },
+    {
+      "column_name": "delivery_details",
+      "data_type": "string",
+      "description": "Information about estimated delivery date",
+      "notes": "Format 'Delivery Day, Month Date' or empty field"
+    },
+    {
+      "column_name": "sustainability_badges",
+      "data_type": "string",
+      "description": "Tags related to sustainability and environmental impact",
+      "notes": "Frequently empty field, when present contains text like 'Carbon impact'"
+    },
+    {
+      "column_name": "image_url",
+      "data_type": "string",
+      "description": "Direct URL to product image on Amazon",
+      "notes": "Complete URLs from m.media-amazon.com domain"
+    },
+    {
+      "column_name": "product_url",
+      "data_type": "string",
+      "description": "URL to official product page on Amazon",
+      "notes": "Relative URLs that need to be concatenated with Amazon domain"
+    },
+    {
+      "column_name": "collected_at",
+      "data_type": "string",
+      "description": "Date and time when data was collected",
+      "notes": "Format 'YYYY-MM-DD HH:MM:SS', all records collected on 2025-08-21 11:14:29"
+    }
+  ]
+}
