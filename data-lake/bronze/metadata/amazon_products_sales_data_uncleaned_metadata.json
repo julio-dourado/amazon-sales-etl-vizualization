@@ -109,7 +109,7 @@
       "column_name": "collected_at",
       "data_type": "string",
       "description": "Date and time when data was collected",
-      "notes": "Format 'YYYY-MM-DD HH:MM:SS', all records collected on 2025-08-21 11:14:29"
+      "notes": "Format 'YYYY-MM-DD HH:MM:SS'"
     }
   ]
 }
