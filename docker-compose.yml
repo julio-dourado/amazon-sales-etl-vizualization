@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: amazon_sales_postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-amazon_sales}
+      POSTGRES_USER: ${POSTGRES_USER:-medallion}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-medallion}
+      TZ: ${TZ:-UTC}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/initdb:/docker-entrypoint-initdb.d:ro
+      - ./data-lake/bronze/data:/data/bronze:ro
+      - ./data-lake/silver/data:/data/silver:ro
+volumes:
+  postgres_data:
