@@ -1,0 +1,152 @@
+{
+  "nome_arquivo": "amazon_products_sales_data_uncleaned.csv",
+  "data_captura": "2025-08-21T11:14:29Z",
+  "fonte_dados": "Amazon Marketplace - Web Scraping",
+  "descricao_geral": "Dados brutos (não processados) de produtos da Amazon coletados através de web scraping. Este conjunto de dados contém informações de produtos eletrônicos incluindo preços, avaliações, informações de entrega e metadados de vendas.",
+  "volume_dados": {
+    "numero_linhas": 42675,
+    "numero_colunas": 16,
+    "tamanho_mb": 37.0
+  },
+  "qualidade_dados": {
+    "status": "não limpo",
+    "observacoes": "Conjunto de dados bruto contendo valores ausentes, inconsistências de formato e dados que requerem limpeza e transformação",
+    "campos_com_valores_ausentes": [
+      "current/discounted_price",
+      "price_on_variant",
+      "buy_box_availability",
+      "delivery_details",
+      "sustainability_badges"
+    ],
+    "tratamento_necessario": "Limpeza de preços, normalização de avaliações, tratamento de valores nulos, padronização de datas"
+  },
+  "esquema": [
+    {
+      "nome_coluna": "title",
+      "tipo_dado": "string",
+      "descricao": "Título completo do produto conforme exibido na Amazon",
+      "observacoes": "Campo sempre preenchido, pode conter caracteres especiais e aspas",
+      "exemplo": "Samsung Galaxy Buds2 Pro True Wireless Bluetooth Earbuds"
+    },
+    {
+      "nome_coluna": "rating",
+      "tipo_dado": "string",
+      "descricao": "Avaliação média do produto no formato 'X.X out of 5 stars'",
+      "observacoes": "Formato textual que precisa ser convertido para numérico",
+      "exemplo": "4.5 out of 5 stars"
+    },
+    {
+      "nome_coluna": "number_of_reviews",
+      "tipo_dado": "string",
+      "descricao": "Número total de avaliações/reviews que o produto recebeu",
+      "observacoes": "Formato textual com vírgulas como separadores de milhares (ex: '2,457')",
+      "exemplo": "12,345"
+    },
+    {
+      "nome_coluna": "bought_in_last_month",
+      "tipo_dado": "string",
+      "descricao": "Quantidade de unidades compradas no último mês",
+      "observacoes": "Formato textual como '300+ bought in past month', '6K+ bought in past month'",
+      "exemplo": "500+ bought in past month"
+    },
+    {
+      "nome_coluna": "current/discounted_price",
+      "tipo_dado": "string/float",
+      "descricao": "Preço atual do produto após aplicação de desconto",
+      "observacoes": "Pode estar vazio, formato numérico quando presente",
+      "exemplo": "149.99"
+    },
+    {
+      "nome_coluna": "price_on_variant",
+      "tipo_dado": "string",
+      "descricao": "Informação sobre preços de variantes do produto (cores, tamanhos, configurações diferentes)",
+      "observacoes": "Formato 'basic variant price: $XX.XX' ou 'nan' quando não aplicável. Variantes podem incluir diferentes cores, capacidades de armazenamento, tamanhos, etc.",
+      "exemplo": "basic variant price: $129.99"
+    },
+    {
+      "nome_coluna": "listed_price",
+      "tipo_dado": "string",
+      "descricao": "Preço original listado antes de qualquer desconto",
+      "observacoes": "Formato '$XXX.XX' ou 'No Discount' quando não há desconto disponível",
+      "exemplo": "$199.99"
+    },
+    {
+      "nome_coluna": "is_best_seller",
+      "tipo_dado": "string",
+      "descricao": "Indica se o produto possui o badge 'Best Seller' na Amazon",
+      "observacoes": "Valores possíveis: 'Best Seller' ou 'No Badge'",
+      "exemplo": "Best Seller"
+    },
+    {
+      "nome_coluna": "is_sponsored",
+      "tipo_dado": "string",
+      "descricao": "Indica se o produto é patrocinado (anúncio pago) ou orgânico nos resultados de busca",
+      "observacoes": "Valores possíveis: 'Sponsored' ou 'Organic'",
+      "exemplo": "Organic"
+    },
+    {
+      "nome_coluna": "is_couponed",
+      "tipo_dado": "string",
+      "descricao": "Informação sobre disponibilidade de cupom de desconto adicional",
+      "observacoes": "Formato 'Save XX% with coupon' ou 'No Coupon'",
+      "exemplo": "Save 10% with coupon"
+    },
+    {
+      "nome_coluna": "buy_box_availability",
+      "tipo_dado": "string",
+      "descricao": "Disponibilidade do botão Buy Box (adicionar ao carrinho) na página de busca",
+      "observacoes": "Valores: 'Add to cart' quando disponível, campo vazio quando indisponível",
+      "exemplo": "Add to cart"
+    },
+    {
+      "nome_coluna": "delivery_details",
+      "tipo_dado": "string",
+      "descricao": "Informação sobre data estimada de entrega do produto",
+      "observacoes": "Formato 'Delivery Day, Month Date' ou campo vazio",
+      "exemplo": "Delivery Monday, Aug 28"
+    },
+    {
+      "nome_coluna": "sustainability_badges",
+      "tipo_dado": "string",
+      "descricao": "Tags relacionadas à sustentabilidade e impacto ambiental do produto",
+      "observacoes": "Campo frequentemente vazio, quando presente contém textos como 'Carbon impact', 'Climate Pledge Friendly', etc.",
+      "exemplo": "Carbon impact"
+    },
+    {
+      "nome_coluna": "image_url",
+      "tipo_dado": "string",
+      "descricao": "URL direta para a imagem principal do produto na Amazon",
+      "observacoes": "URLs completas do domínio m.media-amazon.com",
+      "exemplo": "https://m.media-amazon.com/images/I/71abc123xyz.jpg"
+    },
+    {
+      "nome_coluna": "product_url",
+      "tipo_dado": "string",
+      "descricao": "URL para a página oficial do produto na Amazon",
+      "observacoes": "URLs relativas que precisam ser concatenadas com o domínio da Amazon (https://www.amazon.com)",
+      "exemplo": "/dp/B09ABCD123"
+    },
+    {
+      "nome_coluna": "collected_at",
+      "tipo_dado": "string",
+      "descricao": "Data e hora em que os dados foram coletados via web scraping",
+      "observacoes": "Formato 'YYYY-MM-DD HH:MM:SS'",
+      "exemplo": "2025-08-21 11:14:29"
+    }
+  ],
+  "informacoes_adicionais": {
+    "categoria_produtos": "Electronics",
+    "idioma": "English",
+    "moeda": "USD",
+    "pais_origem": "United States",
+    "metodo_coleta": "Web Scraping automatizado",
+    "frequencia_atualizacao": "Snapshot único",
+    "licenca": "Uso acadêmico e educacional",
+    "observacoes_tecnicas": [
+      "Dados coletados da interface pública da Amazon",
+      "Contém campos textuais que necessitam parsing e conversão",
+      "Preços podem variar rapidamente no marketplace real",
+      "Alguns produtos podem ter sido removidos ou alterados desde a coleta"
+    ]
+  }
+}
