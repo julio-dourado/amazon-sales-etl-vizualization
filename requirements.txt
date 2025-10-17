@@ -6,3 +6,5 @@ seaborn
 jupyter
 notebook
 ipykernel
+psycopg2-binary
+python-dotenv
