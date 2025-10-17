@@ -1,32 +1,81 @@
 # amazon-sales-etl-vizualization
 An ETL pipeline and Medallion Architecture project for analyzing Amazon sales data.
 
-## 🐘 Postgres silver layer
+## 🐘 Postgres Database (Bronze & Silver Layers)
 
-The repository ships with a Docker Compose definition that spins up a Postgres instance and loads the curated "silver" dataset automatically. The import runs once, on the first start, using the CSV located in `data-lake/silver/data/amazon_products_cleaned.csv` (the file is mounted read-only into the container).
+O repositório inclui uma configuração Docker Compose que sobe automaticamente uma instância Postgres e carrega ambas as camadas **bronze** (dados brutos) e **silver** (dados limpos). A importação ocorre automaticamente na primeira execução.
 
-### 1. Configure environment variables (optional)
+### 📋 Pré-requisitos
 
-```
+- Docker
+- Docker Compose
+
+### 🚀 Como subir o banco de dados
+
+#### 1. Configure as variáveis de ambiente (opcional)
+
+```bash
 cp .env.example .env
-# adjust POSTGRES_* values if needed
 ```
 
-If you skip this step the defaults from `.env.example` are applied automatically.
+Se você pular este passo, os valores padrão do `.env.example` serão aplicados automaticamente.
 
-### 2. Start the database
+#### 2. Suba o banco de dados
 
-```
+```bash
 docker compose up -d
 ```
 
-- Access: `postgres://medallion:medallion@localhost:5432/amazon_sales` (or whatever you configured).
-- The curated table lives at `silver.amazon_products_sales_curated`.
+Isso irá:
+- Criar um container Postgres
+- Criar os schemas `bronze` e `silver`
+- Criar as tabelas com IDs auto-incrementados
+- Carregar os dados do CSV para ambas as camadas
 
-### 3. Validate the load (optional)
+#### 3. Acesse o banco de dados
 
+**String de conexão:**
 ```
-docker compose exec postgres psql -U ${POSTGRES_USER:-medallion} -d ${POSTGRES_DB:-amazon_sales} -c "SELECT COUNT(*) FROM silver.amazon_products_sales_curated;"
+postgres://medallion:medallion@localhost:5432/amazon_sales
 ```
 
-The expected count is 42,676 rows.
+**Tabelas disponíveis:**
+- `bronze.amazon_products_sales_raw` - Dados brutos com ID
+- `silver.amazon_products_sales_curated` - Dados limpos com ID
+
+#### 4. Valide a carga (opcional)
+
+**Verificar camada bronze:**
+```bash
+docker compose exec postgres psql -U medallion -d amazon_sales -c "SELECT COUNT(*) FROM bronze.amazon_products_sales_raw;"
+```
+
+**Verificar camada silver:**
+```bash
+docker compose exec postgres psql -U medallion -d amazon_sales -c "SELECT COUNT(*) FROM silver.amazon_products_sales_curated;"
+```
+
+**Contagem esperada:** 42,676 linhas em cada tabela.
+
+#### 5. Comandos úteis
+
+**Parar o banco:**
+```bash
+docker compose down
+```
+
+**Parar e remover volumes (limpar dados):**
+```bash
+docker compose down -v
+```
+
+**Recriar o banco do zero:**
+```bash
+docker compose down -v
+docker compose up -d
+```
+
+**Acessar o psql interativo:**
+```bash
+docker compose exec postgres psql -U medallion -d amazon_sales
+```
