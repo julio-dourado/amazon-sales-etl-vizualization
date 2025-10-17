@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/postgres/initdb:/docker-entrypoint-initdb.d:ro
-      - ./data-lake/bronze/data:/data/bronze:ro
+      - ./data-lake/raw/data:/data/bronze:ro
       - ./data-lake/silver/data:/data/silver:ro
 volumes:
   postgres_data:
