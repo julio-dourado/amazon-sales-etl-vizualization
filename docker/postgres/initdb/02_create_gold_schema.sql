@@ -11,7 +11,7 @@ CREATE SCHEMA gold;
 -- ============================================================================
 CREATE TABLE gold.dim_prdt (
     prdt_key SERIAL PRIMARY KEY,
-    asin VARCHAR(10) UNIQUE NOT NULL,
+    asin VARCHAR(20) UNIQUE NOT NULL,
     titulo TEXT,
     marca VARCHAR(100),
     categoria VARCHAR(50),
@@ -54,21 +54,17 @@ CREATE INDEX idx_tmp_data ON gold.dim_tmp(data);
 CREATE INDEX idx_tmp_mes_ano ON gold.dim_tmp(mes_ano);
 
 -- ============================================================================
--- DIMENSION 3: DESCONTO
+-- DIMENSION 3: CATEGORIA
 -- ============================================================================
-CREATE TABLE gold.dim_desc (
-    desc_key SERIAL PRIMARY KEY,
-    faixa_desconto VARCHAR(20) NOT NULL,  -- 'No Discount', '20-30%', etc.
-    tem_cupom BOOLEAN NOT NULL,
-    
-    -- Metadata para análise
-    desconto_min NUMERIC(5,2),
-    desconto_max NUMERIC(5,2),
-    
-    UNIQUE(faixa_desconto, tem_cupom)
+CREATE TABLE gold.dim_cat (
+    cat_key SERIAL PRIMARY KEY,
+    categoria VARCHAR(50) NOT NULL UNIQUE,
+    tipo_produto VARCHAR(50),
+    segmento VARCHAR(50)
 );
 
-CREATE INDEX idx_desc_faixa ON gold.dim_desc(faixa_desconto);
+CREATE INDEX idx_cat_categoria ON gold.dim_cat(categoria);
+CREATE INDEX idx_cat_segmento ON gold.dim_cat(segmento);
 
 -- ============================================================================
 -- FACT TABLE: VENDAS
@@ -79,7 +75,7 @@ CREATE TABLE gold.ft_vnd (
     -- Foreign Keys
     prdt_key INTEGER NOT NULL REFERENCES gold.dim_prdt(prdt_key),
     tmp_key INTEGER NOT NULL REFERENCES gold.dim_tmp(tmp_key),
-    desc_key INTEGER NOT NULL REFERENCES gold.dim_desc(desc_key),
+    cat_key INTEGER NOT NULL REFERENCES gold.dim_cat(cat_key),
     
     -- Measures (Métricas Numéricas)
     unidades_vendidas INTEGER,
@@ -98,7 +94,7 @@ CREATE TABLE gold.ft_vnd (
 
 CREATE INDEX idx_ft_vnd_prdt ON gold.ft_vnd(prdt_key);
 CREATE INDEX idx_ft_vnd_tmp ON gold.ft_vnd(tmp_key);
-CREATE INDEX idx_ft_vnd_desc ON gold.ft_vnd(desc_key);
+CREATE INDEX idx_ft_vnd_cat ON gold.ft_vnd(cat_key);
 CREATE INDEX idx_ft_vnd_receita ON gold.ft_vnd(receita_estimada);
 
 -- ============================================================================

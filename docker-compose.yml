@@ -7,11 +7,12 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-amazon_sales}
-      POSTGRES_USER: ${POSTGRES_USER:-medallion}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-medallion}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       TZ: ${TZ:-UTC}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/postgres/initdb:/docker-entrypoint-initdb.d:ro
+
 volumes:
   postgres_data:
