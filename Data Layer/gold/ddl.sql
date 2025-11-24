@@ -87,10 +87,10 @@ COMMENT ON COLUMN gold.dim_cat.cat_key IS 'Chave primária surrogate';
 CREATE TABLE gold.ft_vnd (
     vnd_key SERIAL PRIMARY KEY,
     
-    -- Foreign Keys
-    prdt_key INTEGER NOT NULL REFERENCES gold.dim_prdt(prdt_key),
-    tmp_key INTEGER NOT NULL REFERENCES gold.dim_tmp(tmp_key),
-    cat_key INTEGER NOT NULL REFERENCES gold.dim_cat(cat_key),
+    -- Foreign Keys (Surrogate Keys)
+    prdt_srk INTEGER NOT NULL REFERENCES gold.dim_prdt(prdt_key),
+    tmp_srk INTEGER NOT NULL REFERENCES gold.dim_tmp(tmp_key),
+    cat_srk INTEGER NOT NULL REFERENCES gold.dim_cat(cat_key),
     
     -- Measures (Métricas Numéricas)
     unidades_vendidas INTEGER,
@@ -107,14 +107,17 @@ CREATE TABLE gold.ft_vnd (
     origem_preco VARCHAR(30)  -- 'original', 'imputed_brand_cat', etc.
 );
 
-CREATE INDEX idx_ft_vnd_prdt ON gold.ft_vnd(prdt_key);
-CREATE INDEX idx_ft_vnd_tmp ON gold.ft_vnd(tmp_key);
-CREATE INDEX idx_ft_vnd_cat ON gold.ft_vnd(cat_key);
+CREATE INDEX idx_ft_vnd_prdt ON gold.ft_vnd(prdt_srk);
+CREATE INDEX idx_ft_vnd_tmp ON gold.ft_vnd(tmp_srk);
+CREATE INDEX idx_ft_vnd_cat ON gold.ft_vnd(cat_srk);
 CREATE INDEX idx_ft_vnd_receita ON gold.ft_vnd(receita_estimada);
 CREATE INDEX idx_ft_vnd_data_coleta ON gold.ft_vnd(data_coleta);
 
 COMMENT ON TABLE gold.ft_vnd IS 'Fato Vendas - Métricas de performance de vendas';
 COMMENT ON COLUMN gold.ft_vnd.vnd_key IS 'Chave primária surrogate';
+COMMENT ON COLUMN gold.ft_vnd.prdt_srk IS 'Chave estrangeira surrogate para dim_prdt';
+COMMENT ON COLUMN gold.ft_vnd.tmp_srk IS 'Chave estrangeira surrogate para dim_tmp';
+COMMENT ON COLUMN gold.ft_vnd.cat_srk IS 'Chave estrangeira surrogate para dim_cat';
 COMMENT ON COLUMN gold.ft_vnd.unidades_vendidas IS 'Quantidade vendida no último mês';
 COMMENT ON COLUMN gold.ft_vnd.receita_estimada IS 'Receita estimada (preço × unidades)';
 COMMENT ON COLUMN gold.ft_vnd.quality_score IS 'Score de qualidade (rating × log(reviews))';
@@ -128,13 +131,13 @@ CREATE OR REPLACE VIEW gold.vw_resumo_categoria AS
 SELECT
     c.categoria,
     c.segmento,
-    COUNT(DISTINCT f.prdt_key) AS total_produtos,
+    COUNT(DISTINCT f.prdt_srk) AS total_produtos,
     SUM(f.unidades_vendidas) AS total_unidades,
     SUM(f.receita_estimada) AS receita_total,
     AVG(f.rating) AS rating_medio,
     AVG(f.quality_score) AS quality_score_medio
 FROM gold.ft_vnd f
-JOIN gold.dim_cat c ON f.cat_key = c.cat_key
+JOIN gold.dim_cat c ON f.cat_srk = c.cat_key
 GROUP BY c.categoria, c.segmento
 ORDER BY receita_total DESC;
 
@@ -149,7 +152,7 @@ SELECT
     SUM(f.unidades_vendidas) AS unidades_total,
     AVG(f.rating) AS rating_medio
 FROM gold.ft_vnd f
-JOIN gold.dim_prdt p ON f.prdt_key = p.prdt_key
+JOIN gold.dim_prdt p ON f.prdt_srk = p.prdt_key
 GROUP BY p.asin, p.titulo, p.marca, p.categoria
 ORDER BY receita_total DESC
 LIMIT 100;
@@ -161,12 +164,12 @@ SELECT
     t.mes,
     t.mes_ano,
     t.trimestre,
-    COUNT(DISTINCT f.prdt_key) AS produtos_vendidos,
+    COUNT(DISTINCT f.prdt_srk) AS produtos_vendidos,
     SUM(f.unidades_vendidas) AS total_unidades,
     SUM(f.receita_estimada) AS receita_total,
     AVG(f.rating) AS rating_medio
 FROM gold.ft_vnd f
-JOIN gold.dim_tmp t ON f.tmp_key = t.tmp_key
+JOIN gold.dim_tmp t ON f.tmp_srk = t.tmp_key
 GROUP BY t.ano, t.mes, t.mes_ano, t.trimestre
 ORDER BY t.ano, t.mes;
 
