@@ -31,7 +31,7 @@ SELECT
           NULLIF(COUNT(DISTINCT p.prdt_key), 0), 2) AS pct_promovivel,
     SUM(CASE WHEN p.best_seller_badge THEN f.receita_estimada ELSE 0 END) AS receita_best_seller
 FROM gold.ft_vnd f
-JOIN gold.dim_prdt p ON f.prdt_key = p.prdt_key
+JOIN gold.dim_prdt p ON f.prdt_srk = p.prdt_key
 GROUP BY p.categoria
 ORDER BY receita_total DESC;
 
@@ -46,7 +46,7 @@ WITH base AS (
         SUM(f.receita_estimada) AS receita_total,
         SUM(f.unidades_vendidas) AS unidades_total
     FROM gold.ft_vnd f
-    JOIN gold.dim_prdt p ON f.prdt_key = p.prdt_key
+    JOIN gold.dim_prdt p ON f.prdt_srk = p.prdt_key
     GROUP BY p.categoria, p.faixa_preco
 ),
 ranked AS (
@@ -80,7 +80,7 @@ SELECT
     ROUND(AVG(f.rating), 2) AS rating_medio,
     ROUND(AVG(f.quality_score), 2) AS quality_score_medio
 FROM gold.ft_vnd f
-JOIN gold.dim_prdt p ON f.prdt_key = p.prdt_key
+JOIN gold.dim_prdt p ON f.prdt_srk = p.prdt_key
 GROUP BY p.faixa_preco
 ORDER BY receita_total DESC;
 
@@ -106,7 +106,7 @@ SELECT
     f.unidades_vendidas,
     f.rating
 FROM gold.ft_vnd f
-JOIN gold.dim_prdt p ON f.prdt_key = p.prdt_key
+JOIN gold.dim_prdt p ON f.prdt_srk = p.prdt_key
 CROSS JOIN limites l
 WHERE f.quality_score >= l.q75_quality
   AND f.receita_estimada <= l.q25_receita
@@ -125,7 +125,7 @@ SELECT
     ROUND(AVG(f.rating), 2) AS rating_medio,
     SUM(COALESCE(f.unidades_vendidas, 0)) AS unidades_total
 FROM gold.dim_prdt p
-LEFT JOIN gold.ft_vnd f ON p.prdt_key = f.prdt_key
+LEFT JOIN gold.ft_vnd f ON p.prdt_key = f.prdt_srk
 GROUP BY p.marca
 HAVING COUNT(DISTINCT p.prdt_key) >= 5
 ORDER BY receita_promovivel DESC
@@ -144,7 +144,7 @@ WITH diario AS (
         SUM(f.unidades_vendidas) AS unidades_total,
         AVG(f.rating) AS rating_medio
     FROM gold.ft_vnd f
-    JOIN gold.dim_tmp t ON f.tmp_key = t.tmp_key
+    JOIN gold.dim_tmp t ON f.tmp_srk = t.tmp_key
     GROUP BY t.data, t.nome_dia_semana
 ),
 ranked AS (
@@ -177,7 +177,7 @@ WITH base AS (
         SUM(f.receita_estimada) AS receita_total,
         SUM(f.unidades_vendidas) AS unidades_total
     FROM gold.ft_vnd f
-    JOIN gold.dim_prdt p ON f.prdt_key = p.prdt_key
+    JOIN gold.dim_prdt p ON f.prdt_srk = p.prdt_key
     GROUP BY p.categoria, f.origem_preco
 ),
 pivot AS (
@@ -226,7 +226,7 @@ WITH base AS (
         SUM(f.unidades_vendidas) AS unidades_total,
         COUNT(DISTINCT p.prdt_key) AS produtos
     FROM gold.ft_vnd f
-    JOIN gold.dim_prdt p ON f.prdt_key = p.prdt_key
+    JOIN gold.dim_prdt p ON f.prdt_srk = p.prdt_key
     GROUP BY 1, 2, 3
 ),
 totais AS (
@@ -260,7 +260,7 @@ SELECT
     p.best_seller_badge,
     p.sponsored_badge
 FROM gold.ft_vnd f
-JOIN gold.dim_prdt p ON f.prdt_key = p.prdt_key
+JOIN gold.dim_prdt p ON f.prdt_srk = p.prdt_key
 GROUP BY p.asin, p.titulo, p.marca, p.categoria, p.faixa_preco, 
          p.best_seller_badge, p.sponsored_badge
 ORDER BY receita_total DESC
