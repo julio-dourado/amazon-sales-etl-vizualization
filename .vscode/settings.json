@@ -1,0 +1,10 @@
+{
+  "python.defaultInterpreterPath": "/usr/bin/python3",
+  "python.analysis.extraPaths": [],
+  "python.languageServer": "None",
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.autoImportCompletions": true
+}
+
+
