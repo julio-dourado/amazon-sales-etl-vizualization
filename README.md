@@ -5,7 +5,7 @@ ETL pipeline with Medallion Architecture for Amazon data analysis.
 ## Authors
 
 - Julio Cesar Almeida Dourado ([julio-dourado](https://github.com/julio-dourado))
-- Leonardo Lago Moreno ([julio-dourado](https://github.com/julio-dourado))
+- Leonardo Lago Moreno ([julio-dourado](https://github.com/lelamo2002))
 - Gustavo Henrique Rodrigues de Sousa ([GustavoHenriqueRS](https://github.com/GustavoHenriqueRS))
 
 ## Dataset
